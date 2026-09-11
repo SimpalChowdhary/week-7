@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: #f7f7f7;
+        }
+
+        .form-container {
+            max-width: 420px;
+            margin: 1.5rem auto;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px
+        }
+
+        input[type="submit"] {
+            padding: 10px 16px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer
+        }
+
+        .error {
+            color: #b00020;
+            margin-bottom: 12px
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <form id="registerForm" action="/register" method="post" novalidate>
+            {% if error %}
+            <p class="error">{{ error }}</p>
+            {% endif %}
+
+            <div id="client-error" class="error" style="display:none"></div>
+
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required minlength="3" maxlength="30"
+                placeholder="Choose a username" value="{{ username | default('') }}">
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="you@example.com"
+                value="{{ email | default('') }}">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required minlength="6"
+                placeholder="At least 6 characters">
+
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required minlength="6"
+                placeholder="Re-enter your password">
+
+            <input type="submit" value="Register">
+        </form>
+    </div>
+
+    <script>
+        (function () {
+            const form = document.getElementById('registerForm');
+            const pwd = document.getElementById('password');
+            const cpwd = document.getElementById('confirm_password');
+            const clientError = document.getElementById('client-error');
+
+            form.addEventListener('submit', function (e) {
+                clientError.style.display = 'none';
+                clientError.textContent = '';
+
+                if (pwd.value.length < 6) {
+                    e.preventDefault();
+                    clientError.textContent = 'Password must be at least 6 characters.';
+                    clientError.style.display = 'block';
+                    pwd.focus();
+                    return false;
+                }
+
+                if (pwd.value !== cpwd.value) {
+                    e.preventDefault();
+                    clientError.textContent = 'Passwords do not match.';
+                    clientError.style.display = 'block';
+                    cpwd.focus();
+                    return false;
+                }
+
+                return true;
+            });
+        })();
+    </script>
+</body>
+
+</html>
